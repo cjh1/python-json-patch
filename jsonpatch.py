@@ -800,8 +800,11 @@ class DiffBuilder(object):
 
                 elif isinstance(old, MutableMapping) and \
                     isinstance(new, MutableMapping):
-                    self._compare_dicts(_path_join(path, key), old, new)
-
+                    if 'id' in old and old.get('id') != new.get('id'):
+                        self._item_removed(path, key, old)
+                        self._item_added(path, key, new)
+                    else:
+                        self._compare_dicts(_path_join(path, key), old, new)
                 elif isinstance(old, MutableSequence) and \
                         isinstance(new, MutableSequence):
                     self._compare_lists(_path_join(path, key), old, new)
